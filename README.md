@@ -35,8 +35,8 @@ The current version can be built with Command Line Tools. Full Xcode is recommen
 From the project root:
 
 ```bash
-rtk swift build
-rtk bash Scripts/build_app.sh
+swift build
+bash Scripts/build_app.sh
 ```
 
 The app bundle will be created at:
@@ -52,7 +52,7 @@ You can launch that `.app` directly, or move it into `/Applications` first.
 For a quick local test:
 
 ```bash
-rtk swift run SnnapyGhost
+swift run SnnapyGhost
 ```
 
 ## First Launch
@@ -119,7 +119,7 @@ Then follow this order:
 If it still does not work, reset the permission:
 
 ```bash
-rtk tccutil reset ScreenCapture local.construct.SnnapyGhost
+tccutil reset ScreenCapture local.construct.SnnapyGhost
 ```
 
 Then open the app again and grant the permission one more time.
@@ -144,7 +144,7 @@ This project uses:
 Common commands:
 
 ```bash
-rtk swift build
-rtk swift run SnnapyGhost
-rtk bash Scripts/build_app.sh
+swift build
+swift run SnnapyGhost
+bash Scripts/build_app.sh
 ```
