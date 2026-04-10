@@ -57,11 +57,27 @@ final class ScreenshotCoordinator {
             return
         }
 
+        guard let displayID = screen.displayID else {
+            cancelSelection()
+            permissionManager.presentConfigurationAlert(
+                title: "截图失败",
+                message: "无法识别当前显示器，无法继续截图。"
+            )
+            return
+        }
+
         let globalRect = CGRect(
             x: screen.frame.origin.x + standardizedLocalRect.origin.x,
             y: screen.frame.origin.y + standardizedLocalRect.origin.y,
             width: standardizedLocalRect.width,
             height: standardizedLocalRect.height
+        )
+
+        let request = ScreenCaptureRequest(
+            displayID: displayID,
+            globalRect: globalRect,
+            sourceRect: standardizedLocalRect,
+            scaleFactor: screen.backingScaleFactor
         )
 
         tearDownOverlays()
@@ -75,7 +91,9 @@ final class ScreenshotCoordinator {
                     return
                 }
 
-                let screenshot = try await ScreenCaptureService.captureImage(in: globalRect)
+                try await Task.sleep(for: .milliseconds(120))
+
+                let screenshot = try await ScreenCaptureService.captureImage(request: request)
                 let image = NSImage(cgImage: screenshot.cgImage, size: screenshot.size)
                 self.presentFloatingPanel(image: image, initialFrame: globalRect)
             } catch {
@@ -107,5 +125,11 @@ final class ScreenshotCoordinator {
 
         panels.append(panel)
         panel.orderFrontRegardless()
+    }
+}
+
+private extension NSScreen {
+    var displayID: CGDirectDisplayID? {
+        deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
     }
 }
